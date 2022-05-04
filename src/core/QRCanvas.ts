@@ -1,11 +1,11 @@
-import calculateImageSize from "../tools/calculateImageSize";
-import errorCorrectionPercents from "../constants/errorCorrectionPercents";
-import QRDot from "../figures/dot/canvas/QRDot";
-import QRCornerSquare from "../figures/cornerSquare/canvas/QRCornerSquare";
-import QRCornerDot from "../figures/cornerDot/canvas/QRCornerDot";
-import { RequiredOptions } from "./QROptions";
-import gradientTypes from "../constants/gradientTypes";
-import { QRCode, Gradient, FilterFunction } from "../types";
+import calculateImageSize from '../tools/calculateImageSize';
+import errorCorrectionPercents from '../constants/errorCorrectionPercents';
+import QRDot from '../figures/dot/canvas/QRDot';
+import QRCornerSquare from '../figures/cornerSquare/canvas/QRCornerSquare';
+import QRCornerDot from '../figures/cornerDot/canvas/QRCornerDot';
+import { RequiredOptions } from './QROptions';
+import gradientTypes from '../constants/gradientTypes';
+import { QRCode, Gradient, FilterFunction } from '../types';
 
 const squareMask = [
   [1, 1, 1, 1, 1, 1, 1],
@@ -35,14 +35,14 @@ export default class QRCanvas {
 
   //TODO don't pass all options to this class
   constructor(options: RequiredOptions) {
-    this._canvas = document.createElement("canvas");
+    this._canvas = document.createElement('canvas');
     this._canvas.width = options.width;
     this._canvas.height = options.height;
     this._options = options;
   }
 
   get context(): CanvasRenderingContext2D | null {
-    return this._canvas.getContext("2d");
+    return this._canvas.getContext('2d');
   }
 
   get width(): number {
@@ -155,20 +155,20 @@ export default class QRCanvas {
 
   drawDots(filter?: FilterFunction): void {
     if (!this._qr) {
-      throw "QR code is not defined";
+      throw 'QR code is not defined';
     }
 
     const canvasContext = this.context;
 
     if (!canvasContext) {
-      throw "QR code is not defined";
+      throw 'QR code is not defined';
     }
 
     const options = this._options;
     const count = this._qr.getModuleCount();
 
     if (count > options.width || count > options.height) {
-      throw "The canvas is too small.";
+      throw 'The canvas is too small.';
     }
 
     const minSize = Math.min(options.width, options.height) - options.margin * 2;
@@ -220,18 +220,18 @@ export default class QRCanvas {
       canvasContext.fillStyle = canvasContext.strokeStyle = options.dotsOptions.color;
     }
 
-    canvasContext.fill("evenodd");
+    canvasContext.fill('evenodd');
   }
 
   drawCorners(filter?: FilterFunction): void {
     if (!this._qr) {
-      throw "QR code is not defined";
+      throw 'QR code is not defined';
     }
 
     const canvasContext = this.context;
 
     if (!canvasContext) {
-      throw "QR code is not defined";
+      throw 'QR code is not defined';
     }
 
     const options = this._options;
@@ -302,7 +302,7 @@ export default class QRCanvas {
         canvasContext.fillStyle = canvasContext.strokeStyle = options.cornersSquareOptions.color;
       }
 
-      canvasContext.fill("evenodd");
+      canvasContext.fill('evenodd');
 
       if (options.cornersDotOptions?.type) {
         const cornersDot = new QRCornerDot({ context: canvasContext, type: options.cornersDotOptions?.type });
@@ -350,7 +350,7 @@ export default class QRCanvas {
         canvasContext.fillStyle = canvasContext.strokeStyle = options.cornersDotOptions.color;
       }
 
-      canvasContext.fill("evenodd");
+      canvasContext.fill('evenodd');
     });
   }
 
@@ -360,10 +360,10 @@ export default class QRCanvas {
       const image = new Image();
 
       if (!options.image) {
-        return reject("Image is not defined");
+        return reject('Image is not defined');
       }
 
-      if (typeof options.imageOptions.crossOrigin === "string") {
+      if (typeof options.imageOptions.crossOrigin === 'string') {
         image.crossOrigin = options.imageOptions.crossOrigin;
       }
 
@@ -389,11 +389,11 @@ export default class QRCanvas {
     const canvasContext = this.context;
 
     if (!canvasContext) {
-      throw "canvasContext is not defined";
+      throw 'canvasContext is not defined';
     }
 
     if (!this._image) {
-      throw "image is not defined";
+      throw 'image is not defined';
     }
 
     const options = this._options;

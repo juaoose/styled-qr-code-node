@@ -1,14 +1,14 @@
-import getMode from "../tools/getMode";
-import mergeDeep from "../tools/merge";
-import downloadURI from "../tools/downloadURI";
-import QRCanvas from "./QRCanvas";
-import QRSVG from "./QRSVG";
-import drawTypes from "../constants/drawTypes";
+import getMode from '../tools/getMode';
+import mergeDeep from '../tools/merge';
+import downloadURI from '../tools/downloadURI';
+import QRCanvas from './QRCanvas';
+import QRSVG from './QRSVG';
+import drawTypes from '../constants/drawTypes';
 
-import defaultOptions, { RequiredOptions } from "./QROptions";
-import sanitizeOptions from "../tools/sanitizeOptions";
-import { Extension, QRCode, Options, DownloadOptions } from "../types";
-import qrcode from "qrcode-generator";
+import defaultOptions, { RequiredOptions } from './QROptions';
+import sanitizeOptions from '../tools/sanitizeOptions';
+import { Extension, QRCode, Options, DownloadOptions } from '../types';
+import qrcode from 'qrcode-generator';
 
 export default class QRCodeStyling {
   _options: RequiredOptions;
@@ -26,14 +26,14 @@ export default class QRCodeStyling {
 
   static _clearContainer(container?: HTMLElement): void {
     if (container) {
-      container.innerHTML = "";
+      container.innerHTML = '';
     }
   }
 
-  async _getQRStylingElement(extension: Extension = "png"): Promise<QRCanvas | QRSVG> {
-    if (!this._qr) throw "QR code is empty";
+  async _getQRStylingElement(extension: Extension = 'png'): Promise<QRCanvas | QRSVG> {
+    if (!this._qr) throw 'QR code is empty';
 
-    if (extension.toLowerCase() === "svg") {
+    if (extension.toLowerCase() === 'svg') {
       let promise, svg: QRSVG;
 
       if (this._svg && this._svgDrawingPromise) {
@@ -96,8 +96,8 @@ export default class QRCodeStyling {
       return;
     }
 
-    if (typeof container.appendChild !== "function") {
-      throw "Container should be a single DOM node";
+    if (typeof container.appendChild !== 'function') {
+      throw 'Container should be a single DOM node';
     }
 
     if (this._options.type === drawTypes.canvas) {
@@ -113,15 +113,15 @@ export default class QRCodeStyling {
     this._container = container;
   }
 
-  async getRawData(extension: Extension = "png"): Promise<Blob | null> {
-    if (!this._qr) throw "QR code is empty";
+  async getRawData(extension: Extension = 'png'): Promise<Blob | null> {
+    if (!this._qr) throw 'QR code is empty';
     const element = await this._getQRStylingElement(extension);
 
-    if (extension.toLowerCase() === "svg") {
+    if (extension.toLowerCase() === 'svg') {
       const serializer = new XMLSerializer();
       const source = serializer.serializeToString(((element as unknown) as QRSVG).getElement());
 
-      return new Blob(['<?xml version="1.0" standalone="no"?>\r\n' + source], { type: "image/svg+xml" });
+      return new Blob(['<?xml version="1.0" standalone="no"?>\r\n' + source], { type: 'image/svg+xml' });
     } else {
       return new Promise((resolve) =>
         ((element as unknown) as QRCanvas).getCanvas().toBlob(resolve, `image/${extension}`, 1)
@@ -130,17 +130,17 @@ export default class QRCodeStyling {
   }
 
   async download(downloadOptions?: Partial<DownloadOptions> | string): Promise<void> {
-    if (!this._qr) throw "QR code is empty";
-    let extension = "png" as Extension;
-    let name = "qr";
+    if (!this._qr) throw 'QR code is empty';
+    let extension = 'png' as Extension;
+    let name = 'qr';
 
     //TODO remove deprecated code in the v2
-    if (typeof downloadOptions === "string") {
+    if (typeof downloadOptions === 'string') {
       extension = downloadOptions as Extension;
       console.warn(
         "Extension is deprecated as argument for 'download' method, please pass object { name: '...', extension: '...' } as argument"
       );
-    } else if (typeof downloadOptions === "object" && downloadOptions !== null) {
+    } else if (typeof downloadOptions === 'object' && downloadOptions !== null) {
       if (downloadOptions.name) {
         name = downloadOptions.name;
       }
@@ -151,12 +151,12 @@ export default class QRCodeStyling {
 
     const element = await this._getQRStylingElement(extension);
 
-    if (extension.toLowerCase() === "svg") {
+    if (extension.toLowerCase() === 'svg') {
       const serializer = new XMLSerializer();
       let source = serializer.serializeToString(((element as unknown) as QRSVG).getElement());
 
       source = '<?xml version="1.0" standalone="no"?>\r\n' + source;
-      const url = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(source);
+      const url = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(source);
       downloadURI(url, `${name}.svg`);
     } else {
       const url = ((element as unknown) as QRCanvas).getCanvas().toDataURL(`image/${extension}`);

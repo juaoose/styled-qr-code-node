@@ -1,7 +1,7 @@
-import calculateImageSize from "./calculateImageSize";
+import calculateImageSize from './calculateImageSize';
 
-describe("Test calculateImageSizeForAxis function", () => {
-  it("The function should return an correct result for 0 sizes", () => {
+describe('Test calculateImageSizeForAxis function', () => {
+  it('The function should return an correct result for 0 sizes', () => {
     expect(
       calculateImageSize({
         originalHeight: 0,
@@ -16,7 +16,7 @@ describe("Test calculateImageSizeForAxis function", () => {
       hideXDots: 0
     });
   });
-  it("The function should return an correct result for minus values", () => {
+  it('The function should return an correct result for minus values', () => {
     expect(
       calculateImageSize({
         originalHeight: -1,
@@ -31,7 +31,7 @@ describe("Test calculateImageSizeForAxis function", () => {
       hideXDots: 0
     });
   });
-  it("The function should return an correct result for small images", () => {
+  it('The function should return an correct result for small images', () => {
     expect(
       calculateImageSize({
         originalHeight: 20,
@@ -46,7 +46,7 @@ describe("Test calculateImageSizeForAxis function", () => {
       hideXDots: 1
     });
   });
-  it("The function should return an correct result for small images, if height is smaller than width", () => {
+  it('The function should return an correct result for small images, if height is smaller than width', () => {
     expect(
       calculateImageSize({
         originalHeight: 10,
@@ -61,7 +61,7 @@ describe("Test calculateImageSizeForAxis function", () => {
       hideXDots: 1
     });
   });
-  it("The function should return an correct result for large images", () => {
+  it('The function should return an correct result for large images', () => {
     expect(
       calculateImageSize({
         originalHeight: 1000,
@@ -76,7 +76,7 @@ describe("Test calculateImageSizeForAxis function", () => {
       hideXDots: 9
     });
   });
-  it("Use the maxHiddenAxisDots value for x", () => {
+  it('Use the maxHiddenAxisDots value for x', () => {
     expect(
       calculateImageSize({
         originalHeight: 1000,
@@ -92,7 +92,7 @@ describe("Test calculateImageSizeForAxis function", () => {
       hideXDots: 1
     });
   });
-  it("Use the maxHiddenAxisDots value for y", () => {
+  it('Use the maxHiddenAxisDots value for y', () => {
     expect(
       calculateImageSize({
         originalHeight: 2020,
@@ -108,7 +108,7 @@ describe("Test calculateImageSizeForAxis function", () => {
       hideXDots: 1
     });
   });
-  it("Use the maxHiddenAxisDots value for y with even value", () => {
+  it('Use the maxHiddenAxisDots value for y with even value', () => {
     expect(
       calculateImageSize({
         originalHeight: 2020,

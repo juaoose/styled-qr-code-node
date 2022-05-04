@@ -1,6 +1,6 @@
-import { DrawTypes } from "../types";
+import { DrawTypes } from '../types';
 
 export default {
-  canvas: "canvas",
-  svg: "svg"
+  canvas: 'canvas',
+  svg: 'svg'
 } as DrawTypes;

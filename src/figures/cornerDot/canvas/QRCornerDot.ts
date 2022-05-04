@@ -1,5 +1,5 @@
-import cornerDotTypes from "../../../constants/cornerDotTypes";
-import { CornerDotType, RotateFigureArgsCanvas, BasicFigureDrawArgsCanvas, DrawArgsCanvas } from "../../../types";
+import cornerDotTypes from '../../../constants/cornerDotTypes';
+import { CornerDotType, RotateFigureArgsCanvas, BasicFigureDrawArgsCanvas, DrawArgsCanvas } from '../../../types';
 
 export default class QRCornerDot {
   _context: CanvasRenderingContext2D;
