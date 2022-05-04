@@ -1,11 +1,7 @@
-import dotTypes from "../../../constants/dotTypes";
-import {
-  DotType,
-  GetNeighbor,
-  RotateFigureArgsCanvas,
-  BasicFigureDrawArgsCanvas,
-  DrawArgsCanvas
-} from "../../../types";
+import dotTypes from '../../constants/dotTypes.js';
+import { DotType, GetNeighbor, RotateFigureArgsCanvas, BasicFigureDrawArgsCanvas, DrawArgsCanvas } from '../../types';
+
+import type { CanvasRenderingContext2D } from 'skia-canvas';
 
 export default class QRDot {
   _context: CanvasRenderingContext2D;

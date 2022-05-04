@@ -1,3 +1,5 @@
+import type { CanvasRenderingContext2D, Image } from 'skia-canvas';
+
 export interface UnknownObject {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;
@@ -8,7 +10,6 @@ export type CornerDotType = 'dot' | 'square';
 export type CornerSquareType = 'dot' | 'square' | 'extra-rounded';
 export type Extension = 'svg' | 'png' | 'jpeg' | 'webp';
 export type GradientType = 'radial' | 'linear';
-export type DrawType = 'canvas' | 'svg';
 
 export type Gradient = {
   type: GradientType;
@@ -33,10 +34,6 @@ export interface CornerDotTypes {
 
 export interface CornerSquareTypes {
   [key: string]: CornerSquareType;
-}
-
-export interface DrawTypes {
-  [key: string]: DrawType;
 }
 
 export type TypeNumber =
@@ -99,12 +96,11 @@ export interface QRCode {
 }
 
 export type Options = {
-  type?: DrawType;
   width?: number;
   height?: number;
   margin?: number;
   data?: string;
-  image?: string;
+  image?: string | Buffer | Image;
   qrOptions?: {
     typeNumber?: TypeNumber;
     mode?: Mode;

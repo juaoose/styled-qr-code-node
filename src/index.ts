@@ -1,14 +1,14 @@
-import QRCodeStyling from './core/QRCodeStyling';
-import dotTypes from './constants/dotTypes';
-import cornerDotTypes from './constants/cornerDotTypes';
-import cornerSquareTypes from './constants/cornerSquareTypes';
-import errorCorrectionLevels from './constants/errorCorrectionLevels';
-import errorCorrectionPercents from './constants/errorCorrectionPercents';
-import modes from './constants/modes';
-import qrTypes from './constants/qrTypes';
-import drawTypes from './constants/drawTypes';
+import QRCodeCanvas from './core/QRCanvas.js';
+import dotTypes from './constants/dotTypes.js';
+import cornerDotTypes from './constants/cornerDotTypes.js';
+import cornerSquareTypes from './constants/cornerSquareTypes.js';
+import errorCorrectionLevels from './constants/errorCorrectionLevels.js';
+import errorCorrectionPercents from './constants/errorCorrectionPercents.js';
+import modes from './constants/modes.js';
+import qrTypes from './constants/qrTypes.js';
+import drawTypes from './constants/drawTypes.js';
 
-export * from './types';
+//export * as types from './types';
 
 export {
   dotTypes,
@@ -21,4 +21,4 @@ export {
   drawTypes
 };
 
-export default QRCodeStyling;
+export default QRCodeCanvas;

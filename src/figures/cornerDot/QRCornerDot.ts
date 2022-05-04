@@ -1,5 +1,6 @@
-import cornerDotTypes from '../../../constants/cornerDotTypes';
-import { CornerDotType, RotateFigureArgsCanvas, BasicFigureDrawArgsCanvas, DrawArgsCanvas } from '../../../types';
+import cornerDotTypes from '../../constants/cornerDotTypes.js';
+import { CornerDotType, RotateFigureArgsCanvas, BasicFigureDrawArgsCanvas, DrawArgsCanvas } from '../../types';
+import type { CanvasRenderingContext2D } from 'skia-canvas';
 
 export default class QRCornerDot {
   _context: CanvasRenderingContext2D;

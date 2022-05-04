@@ -1,11 +1,17 @@
-import calculateImageSize from '../tools/calculateImageSize';
-import errorCorrectionPercents from '../constants/errorCorrectionPercents';
-import QRDot from '../figures/dot/canvas/QRDot';
-import QRCornerSquare from '../figures/cornerSquare/canvas/QRCornerSquare';
-import QRCornerDot from '../figures/cornerDot/canvas/QRCornerDot';
-import { RequiredOptions } from './QROptions';
-import gradientTypes from '../constants/gradientTypes';
-import { QRCode, Gradient, FilterFunction } from '../types';
+import calculateImageSize from '../tools/calculateImageSize.js';
+import errorCorrectionPercents from '../constants/errorCorrectionPercents.js';
+import QRDot from '../figures/dot/QRDot.js';
+import QRCornerSquare from '../figures/cornerSquare/QRCornerSquare.js';
+import QRCornerDot from '../figures/cornerDot/QRCornerDot.js';
+import defaultOptions, { RequiredOptions } from './QROptions.js';
+import gradientTypes from '../constants/gradientTypes.js';
+import { QRCode, Gradient, FilterFunction, Options } from '../types';
+import getMode from '../tools/getMode.js';
+import { Canvas, CanvasRenderingContext2D, ExportFormat, RenderOptions, loadImage, Image } from 'skia-canvas';
+import qrcode from 'qrcode-generator';
+import { promises as fs } from 'fs';
+import mergeDeep from '../tools/merge.js';
+import sanitizeOptions from '../tools/sanitizeOptions.js';
 
 const squareMask = [
   [1, 1, 1, 1, 1, 1, 1],
@@ -28,36 +34,52 @@ const dotMask = [
 ];
 
 export default class QRCanvas {
-  _canvas: HTMLCanvasElement;
-  _options: RequiredOptions;
-  _qr?: QRCode;
-  _image?: HTMLImageElement;
+  private _options: RequiredOptions;
+  private _qr: QRCode;
+  private _image?: Image;
+  private _canvas: Canvas;
+  private _width: number;
+  private _height: number;
+
+  private created: Promise<void>;
 
   //TODO don't pass all options to this class
-  constructor(options: RequiredOptions) {
-    this._canvas = document.createElement('canvas');
-    this._canvas.width = options.width;
-    this._canvas.height = options.height;
-    this._options = options;
+  constructor(options: Options) {
+    const mergedOptions = sanitizeOptions(mergeDeep(defaultOptions, options) as RequiredOptions);
+
+    this._width = mergedOptions.width;
+    this._height = mergedOptions.height;
+    this._canvas = new Canvas(this._width, this._height);
+
+    this._options = mergedOptions;
+
+    //Explicit cast due to type mismatch on skia canvas and qrcode types. Due to missing function definition in skia canvas renderer which is never used
+    this._qr = (qrcode(
+      this._options.qrOptions.typeNumber,
+      this._options.qrOptions.errorCorrectionLevel
+    ) as any) as QRCode;
+
+    this._qr.addData(this._options.data, this._options.qrOptions.mode || getMode(this._options.data));
+    this.created = this.drawQR();
   }
 
-  get context(): CanvasRenderingContext2D | null {
+  get context(): CanvasRenderingContext2D {
     return this._canvas.getContext('2d');
   }
 
   get width(): number {
-    return this._canvas.width;
+    return this._width;
   }
 
   get height(): number {
-    return this._canvas.height;
+    return this._height;
   }
 
-  getCanvas(): HTMLCanvasElement {
+  getCanvas(): Canvas {
     return this._canvas;
   }
 
-  clear(): void {
+  private clear(): void {
     const canvasContext = this.context;
 
     if (canvasContext) {
@@ -65,8 +87,9 @@ export default class QRCanvas {
     }
   }
 
-  async drawQR(qr: QRCode): Promise<void> {
-    const count = qr.getModuleCount();
+  private async drawQR(): Promise<void> {
+    this._qr.make();
+    const count = this._qr.getModuleCount();
     const minSize = Math.min(this._options.width, this._options.height) - this._options.margin * 2;
     const dotSize = Math.floor(minSize / count);
     let drawImageSize = {
@@ -76,11 +99,13 @@ export default class QRCanvas {
       height: 0
     };
 
-    this._qr = qr;
+    if (this._options.image !== undefined) {
+      if (typeof this._options.image === 'string' || Buffer.isBuffer(this._options.image)) {
+        this._image = await loadImage(this._options.image);
+      } else {
+        this._image = this._options.image;
+      }
 
-    if (this._options.image) {
-      await this.loadImage();
-      if (!this._image) return;
       const { imageOptions, qrOptions } = this._options;
       const coverLevel = imageOptions.imageSize * errorCorrectionPercents[qrOptions.errorCorrectionLevel];
       const maxHiddenDots = Math.floor(coverLevel * count * count);
@@ -120,12 +145,12 @@ export default class QRCanvas {
     });
     this.drawCorners();
 
-    if (this._options.image) {
+    if (this._options.image !== undefined) {
       this.drawImage({ width: drawImageSize.width, height: drawImageSize.height, count, dotSize });
     }
   }
 
-  drawBackground(): void {
+  private drawBackground(): void {
     const canvasContext = this.context;
     const options = this._options;
 
@@ -153,7 +178,7 @@ export default class QRCanvas {
     }
   }
 
-  drawDots(filter?: FilterFunction): void {
+  private drawDots(filter?: FilterFunction): void {
     if (!this._qr) {
       throw 'QR code is not defined';
     }
@@ -223,7 +248,7 @@ export default class QRCanvas {
     canvasContext.fill('evenodd');
   }
 
-  drawCorners(filter?: FilterFunction): void {
+  private drawCorners(filter?: FilterFunction): void {
     if (!this._qr) {
       throw 'QR code is not defined';
     }
@@ -354,28 +379,7 @@ export default class QRCanvas {
     });
   }
 
-  loadImage(): Promise<void> {
-    return new Promise((resolve, reject) => {
-      const options = this._options;
-      const image = new Image();
-
-      if (!options.image) {
-        return reject('Image is not defined');
-      }
-
-      if (typeof options.imageOptions.crossOrigin === 'string') {
-        image.crossOrigin = options.imageOptions.crossOrigin;
-      }
-
-      this._image = image;
-      image.onload = (): void => {
-        resolve();
-      };
-      image.src = options.image;
-    });
-  }
-
-  drawImage({
+  private drawImage({
     width,
     height,
     count,
@@ -407,7 +411,7 @@ export default class QRCanvas {
     canvasContext.drawImage(this._image, dx, dy, dw < 0 ? 0 : dw, dh < 0 ? 0 : dh);
   }
 
-  _createGradient({
+  private _createGradient({
     context,
     options,
     additionalRotation,
@@ -463,5 +467,40 @@ export default class QRCanvas {
     }
 
     return gradient;
+  }
+
+  /**
+   * Create a buffer object with the content of the qr code
+   *
+   * @param format Supported types: "png" | "jpg" | "jpeg" | "pdf" | "svg"
+   * @param options export options see https://github.com/samizdatco/skia-canvas#tobufferformat-page-matte-density-quality-outline
+   */
+  async toBuffer(format: ExportFormat = 'png', options?: RenderOptions): Promise<Buffer> {
+    await this.created;
+    return this._canvas.toBuffer(format, options);
+  }
+
+  /**
+   *  Create a data url with the content of the qr code
+   *
+   * @param format Supported types: "png" | "jpg" | "jpeg" | "pdf" | "svg"
+   * @param options export options see https://github.com/samizdatco/skia-canvas#tobufferformat-page-matte-density-quality-outline
+   */
+  async toDataUrl(format: ExportFormat = 'png', options?: RenderOptions): Promise<string> {
+    await this.created;
+    return this._canvas.toDataURL(format, options);
+  }
+
+  /**
+   * Create a file of the qr code and save it to disk
+   *
+   * @param filePath file path including extension
+   * @param format Supported types: "png" | "jpg" | "jpeg" | "pdf" | "svg"
+   * @param options export options see https://github.com/samizdatco/skia-canvas#tobufferformat-page-matte-density-quality-outline
+   * @returns a promise that resolves once the file was written to disk
+   */
+  async toFile(filePath: string, format: ExportFormat = 'png', options?: RenderOptions): Promise<void> {
+    await this.created;
+    return fs.writeFile(filePath, await this._canvas.toBuffer(format, options));
   }
 }

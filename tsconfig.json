@@ -6,7 +6,6 @@
     "target": "es2021",
     "lib": ["es2021"],
     "allowJs": true,
-    "checkJs": true,
     "moduleResolution": "node",
     "declaration": true,
     "allowSyntheticDefaultImports": true,
