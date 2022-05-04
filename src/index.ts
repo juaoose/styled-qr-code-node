@@ -8,7 +8,7 @@ import modes from './constants/modes.js';
 import qrTypes from './constants/qrTypes.js';
 import drawTypes from './constants/drawTypes.js';
 
-export * as types from './types';
+//export * as types from './types';
 
 export {
   dotTypes,
