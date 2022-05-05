@@ -1,6 +1,6 @@
 /// <reference types="node" />
 import { Options } from '../types';
-import { Canvas, CanvasRenderingContext2D, ExportFormat, RenderOptions } from 'skia-canvas';
+import { CanvasRenderingContext2D, ExportFormat, RenderOptions } from 'skia-canvas';
 export default class QRCanvas {
     private _options;
     private _qr;
@@ -8,12 +8,11 @@ export default class QRCanvas {
     private _canvas;
     private _width;
     private _height;
-    private created;
+    created: Promise<void>;
     constructor(options: Options);
     get context(): CanvasRenderingContext2D;
     get width(): number;
     get height(): number;
-    getCanvas(): Canvas;
     private clear;
     private drawQR;
     private drawBackground;
@@ -27,14 +26,14 @@ export default class QRCanvas {
      * @param format Supported types: "png" | "jpg" | "jpeg" | "pdf" | "svg"
      * @param options export options see https://github.com/samizdatco/skia-canvas#tobufferformat-page-matte-density-quality-outline
      */
-    toBuffer(format: ExportFormat, options?: RenderOptions): Promise<Buffer>;
+    toBuffer(format?: ExportFormat, options?: RenderOptions): Promise<Buffer>;
     /**
      *  Create a data url with the content of the qr code
      *
      * @param format Supported types: "png" | "jpg" | "jpeg" | "pdf" | "svg"
      * @param options export options see https://github.com/samizdatco/skia-canvas#tobufferformat-page-matte-density-quality-outline
      */
-    toDataUrl(format: ExportFormat, options?: RenderOptions): Promise<string>;
+    toDataUrl(format?: ExportFormat, options?: RenderOptions): Promise<string>;
     /**
      * Create a file of the qr code and save it to disk
      *
@@ -43,5 +42,5 @@ export default class QRCanvas {
      * @param options export options see https://github.com/samizdatco/skia-canvas#tobufferformat-page-matte-density-quality-outline
      * @returns a promise that resolves once the file was written to disk
      */
-    toFile(filePath: string, format: ExportFormat, options?: RenderOptions): Promise<void>;
+    toFile(filePath: string, format?: ExportFormat, options?: RenderOptions): Promise<void>;
 }

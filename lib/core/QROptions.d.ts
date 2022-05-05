@@ -1,6 +1,5 @@
-import { DotType, Options, TypeNumber, ErrorCorrectionLevel, Mode, DrawType, Gradient } from '../types';
+import { DotType, Options, TypeNumber, ErrorCorrectionLevel, Mode, Gradient } from '../types';
 export interface RequiredOptions extends Options {
-    type: DrawType;
     width: number;
     height: number;
     margin: number;

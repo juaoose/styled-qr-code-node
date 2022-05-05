@@ -1,5 +1,4 @@
 import qrTypes from '../constants/qrTypes.js';
-import drawTypes from '../constants/drawTypes.js';
 import errorCorrectionLevels from '../constants/errorCorrectionLevels.js';
 import { DotType, Options, TypeNumber, ErrorCorrectionLevel, Mode, Gradient } from '../types';
 

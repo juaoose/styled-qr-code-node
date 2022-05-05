@@ -41,7 +41,7 @@ export default class QRCanvas {
   private _width: number;
   private _height: number;
 
-  private created: Promise<void>;
+  public created: Promise<void>;
 
   //TODO don't pass all options to this class
   constructor(options: Options) {
@@ -73,10 +73,6 @@ export default class QRCanvas {
 
   get height(): number {
     return this._height;
-  }
-
-  getCanvas(): Canvas {
-    return this._canvas;
   }
 
   private clear(): void {
