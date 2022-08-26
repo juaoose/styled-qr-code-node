@@ -9,21 +9,21 @@
   ],
   "type": "module",
   "dependencies": {
-    "nan": "^2.15.0",
+    "nan": "^2.16.0",
     "qrcode-generator": "^1.4.4",
     "rimraf": "^3.0.2",
-    "skia-canvas": "^0.9.29"
+    "skia-canvas": "^1.0.0"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.22.0",
-    "@typescript-eslint/parser": "^5.22.0",
-    "eslint": "^8.14.0",
+    "@typescript-eslint/eslint-plugin": "^5.35.1",
+    "@typescript-eslint/parser": "^5.35.1",
+    "eslint": "^8.22.0",
     "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-jest": "^26.1.5",
-    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-jest": "^26.8.7",
+    "eslint-plugin-prettier": "^4.2.1",
     "html-webpack-plugin": "^5.5.0",
-    "prettier": "^2.6.2",
-    "typescript": "^4.6.4"
+    "prettier": "^2.7.1",
+    "typescript": "^4.8.2"
   },
   "scripts": {
     "build": "rimraf ./lib/ && tsc",
