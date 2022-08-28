@@ -54,10 +54,10 @@ export default class QRCanvas {
     this._options = mergedOptions;
 
     //Explicit cast due to type mismatch on skia canvas and qrcode types. Due to missing function definition in skia canvas renderer which is never used
-    this._qr = (qrcode(
+    this._qr = qrcode(
       this._options.qrOptions.typeNumber,
       this._options.qrOptions.errorCorrectionLevel
-    ) as any) as QRCode;
+    ) as any as QRCode;
 
     this._qr.addData(this._options.data, this._options.qrOptions.mode || getMode(this._options.data));
     this.created = this.drawQR();
@@ -208,16 +208,15 @@ export default class QRCanvas {
         if (!this._qr.isDark(i, j)) {
           continue;
         }
-        dot.draw(
-          yBeginning + j * dotSize,
-          xBeginning + i * dotSize,
-          dotSize,
-          (xOffset: number, yOffset: number): boolean => {
-            if (i + xOffset < 0 || j + yOffset < 0 || i + xOffset >= count || j + yOffset >= count) return false;
-            if (filter && !filter(i + xOffset, j + yOffset)) return false;
-            return !!this._qr && this._qr.isDark(i + xOffset, j + yOffset);
-          }
-        );
+
+        const x = yBeginning + j * dotSize;
+        const y = xBeginning + i * dotSize;
+
+        dot.draw(x, y, dotSize, (xOffset: number, yOffset: number): boolean => {
+          if (j + xOffset < 0 || i + yOffset < 0 || j + xOffset >= count || i + yOffset >= count) return false;
+          if (filter && !filter(j + xOffset, i + yOffset)) return false;
+          return !!this._qr && this._qr.isDark(i + yOffset, j + xOffset);
+        });
       }
     }
 
