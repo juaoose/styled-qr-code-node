@@ -7,8 +7,15 @@ import errorCorrectionPercents from './constants/errorCorrectionPercents.js';
 import modes from './constants/modes.js';
 import qrTypes from './constants/qrTypes.js';
 
-//export * as types from './types';
+export * from './types';
 
-export { dotTypes, cornerDotTypes, cornerSquareTypes, errorCorrectionLevels, errorCorrectionPercents, modes, qrTypes };
-
-export default QRCodeCanvas;
+export {
+  QRCodeCanvas,
+  dotTypes,
+  cornerDotTypes,
+  cornerSquareTypes,
+  errorCorrectionLevels,
+  errorCorrectionPercents,
+  modes,
+  qrTypes
+};
