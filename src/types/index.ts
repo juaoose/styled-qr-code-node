@@ -1,4 +1,4 @@
-import type { CanvasRenderingContext2D, Image } from 'skia-canvas';
+import { SKRSContext2D, Image } from '@napi-rs/canvas';
 
 export interface UnknownObject {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -92,7 +92,7 @@ export interface QRCode {
   createDataURL(cellSize?: number, margin?: number): string;
   createTableTag(cellSize?: number, margin?: number): string;
   createASCII(cellSize?: number, margin?: number): string;
-  renderTo2dContext(context: CanvasRenderingContext2D, cellSize?: number): void;
+  renderTo2dContext(context: SKRSContext2D, cellSize?: number): void;
 }
 
 export type Options = {
@@ -164,15 +164,15 @@ export type RotateFigureArgs = {
 };
 
 export type DrawArgsCanvas = DrawArgs & {
-  context: CanvasRenderingContext2D;
+  context: SKRSContext2D;
 };
 
 export type BasicFigureDrawArgsCanvas = BasicFigureDrawArgs & {
-  context: CanvasRenderingContext2D;
+  context: SKRSContext2D;
 };
 
 export type RotateFigureArgsCanvas = RotateFigureArgs & {
-  context: CanvasRenderingContext2D;
+  context: SKRSContext2D;
 };
 
 export type GetNeighbor = (x: number, y: number) => boolean;

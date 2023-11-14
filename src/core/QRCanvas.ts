@@ -7,7 +7,7 @@ import defaultOptions, { RequiredOptions } from './QROptions.js';
 import gradientTypes from '../constants/gradientTypes.js';
 import { QRCode, Gradient, FilterFunction, Options } from '../types';
 import getMode from '../tools/getMode.js';
-import { Canvas, CanvasRenderingContext2D, ExportFormat, RenderOptions, loadImage, Image } from 'skia-canvas';
+import { Canvas, SKRSContext2D, loadImage, Image } from '@napi-rs/canvas';
 import qrcode from 'qrcode-generator';
 import { promises as fs } from 'fs';
 import mergeDeep from '../tools/merge.js';
@@ -63,7 +63,7 @@ export default class QRCanvas {
     this.created = this.drawQR();
   }
 
-  get context(): CanvasRenderingContext2D {
+  get context(): SKRSContext2D {
     return this._canvas.getContext('2d');
   }
 
@@ -107,8 +107,8 @@ export default class QRCanvas {
       const maxHiddenDots = Math.floor(coverLevel * count * count);
 
       drawImageSize = calculateImageSize({
-        originalWidth: this._image.width,
-        originalHeight: this._image.height,
+        originalWidth: this._image?.width ?? 0,
+        originalHeight: this._image?.height ?? 0,
         maxHiddenDots,
         maxHiddenAxisDots: count - 14,
         dotSize
@@ -414,13 +414,13 @@ export default class QRCanvas {
     y,
     size
   }: {
-    context: CanvasRenderingContext2D;
+    context: SKRSContext2D;
     options: Gradient;
     additionalRotation: number;
     x: number;
     y: number;
     size: number;
-  }): CanvasGradient {
+  }) {
     let gradient;
 
     if (options.type === gradientTypes.radial) {
@@ -470,9 +470,9 @@ export default class QRCanvas {
    * @param format Supported types: "png" | "jpg" | "jpeg" | "pdf" | "svg"
    * @param options export options see https://github.com/samizdatco/skia-canvas#tobufferformat-page-matte-density-quality-outline
    */
-  async toBuffer(format: ExportFormat = 'png', options?: RenderOptions): Promise<Buffer> {
+  async toBuffer(format: 'image/png'): Promise<Buffer> {
     await this.created;
-    return this._canvas.toBuffer(format, options);
+    return this._canvas.toBuffer(format);
   }
 
   /**
@@ -481,9 +481,9 @@ export default class QRCanvas {
    * @param format Supported types: "png" | "jpg" | "jpeg" | "pdf" | "svg"
    * @param options export options see https://github.com/samizdatco/skia-canvas#tobufferformat-page-matte-density-quality-outline
    */
-  async toDataUrl(format: ExportFormat = 'png', options?: RenderOptions): Promise<string> {
+  async toDataUrl(format: 'image/png', quality?: number): Promise<string> {
     await this.created;
-    return this._canvas.toDataURL(format, options);
+    return this._canvas.toDataURL(format, quality);
   }
 
   /**
@@ -494,8 +494,8 @@ export default class QRCanvas {
    * @param options export options see https://github.com/samizdatco/skia-canvas#tobufferformat-page-matte-density-quality-outline
    * @returns a promise that resolves once the file was written to disk
    */
-  async toFile(filePath: string, format: ExportFormat = 'png', options?: RenderOptions): Promise<void> {
+  async toFile(filePath: string, format: 'image/png'): Promise<void> {
     await this.created;
-    return fs.writeFile(filePath, await this._canvas.toBuffer(format, options));
+    return fs.writeFile(filePath, await this._canvas.toBuffer(format));
   }
 }
