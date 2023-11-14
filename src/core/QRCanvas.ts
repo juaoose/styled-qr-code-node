@@ -266,8 +266,8 @@ export default class QRCanvas {
 
     [
       [0, 0, 0],
-      [1, 0, Math.PI / 2],
-      [0, 1, -Math.PI / 2]
+      [1, 0, 0],
+      [0, 1, 0]
     ].forEach(([column, row, rotation]) => {
       if (filter && !filter(column, row)) {
         return;

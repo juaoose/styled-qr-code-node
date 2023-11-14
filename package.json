@@ -1,6 +1,6 @@
 {
-  "name": "@juaoose/styled-qr-code-node",
-  "version": "1.0.0",
+  "name": "lambda-styled-qr-code",
+  "version": "1.0.2",
   "description": "Add a style and an image to your QR code",
   "files": [
     "dist"

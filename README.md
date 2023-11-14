@@ -1,5 +1,7 @@
 # QR Code Styling
 
+> This is the fork of the fork. This version uses `@napi-rs/canvas` instead of `skia-canvas` to make it easier to deploy on environments such as AWS Lambda. This forks from [Loskir's version](https://github.com/Loskir/styled-qr-code)
+
 JavaScript library for generating QR codes with a logo and styling.
 
 **This is a NodeJS fork of the QR code styling repo [qr-code-styling](https://github.com/kozakdenys/qr-code-styling),
